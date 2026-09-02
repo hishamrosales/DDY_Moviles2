@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:DDY.Models"
+             xmlns:vm="clr-namespace:DDY.ViewModels"
+             x:Class="DDY.Views.FavoritosPage"
+             x:DataType="vm:FavoritosViewModel"
+             x:Name="favoritosPage"
+             Title="Favoritos">
+
+    <CollectionView ItemsSource="{Binding Favoritos}"
+                    Margin="10">
+
+        <CollectionView.EmptyView>
+
+            <VerticalStackLayout Padding="30"
+                                 Spacing="10"
+                                 VerticalOptions="Center">
+
+                <Label Text="No tienes cartas favoritas"
+                       FontSize="20"
+                       HorizontalOptions="Center" />
+
+                <Label Text="Agrega cartas desde la página de detalle."
+                       FontSize="14"
+                       TextColor="Gray"
+                       HorizontalOptions="Center" />
+
+            </VerticalStackLayout>
+
+        </CollectionView.EmptyView>
+
+        <CollectionView.ItemTemplate>
+
+            <DataTemplate x:DataType="models:CartaPokemon">
+
+                <Grid Padding="10"
+                      ColumnDefinitions="80,*,Auto">
+
+                    
+
+                    <VerticalStackLayout Grid.Column="1"
+                                         Margin="10,0,0,0"
+                                         VerticalOptions="Center">
+
+                        <Label Text="{Binding Nombre}"
+                               FontAttributes="Bold"
+                               FontSize="16" />
+
+                        <Label Text="{Binding Categoria}"
+                               FontSize="14"
+                               TextColor="Gray" />
+
+                        <Label Text="{Binding Tipo}"
+                               FontSize="14" />
+
+                        <Label Text="{Binding Rareza}"
+                               FontSize="14"
+                               TextColor="Purple" />
+
+                        <Label Text="{Binding ValorEstimado, StringFormat='Valor: ${0:N2} MXN'}"
+                               FontSize="14"
+                               TextColor="DarkGreen" />
+
+                    </VerticalStackLayout>
+
+                    <Button Text="Eliminar"
+                            Grid.Column="2"
+                            VerticalOptions="Center"
+                            Command="{Binding BindingContext.EliminarFavoritoCommand, Source={x:Reference favoritosPage}}"
+                            CommandParameter="{Binding .}" />
+
+                </Grid>
+
+            </DataTemplate>
+
+        </CollectionView.ItemTemplate>
+
+    </CollectionView>
+
+</ContentPage>

@@ -6,7 +6,7 @@
     <VerticalStackLayout Padding="20" Spacing="15">
 
         <Label
-            Text="🎴 Catálogo de Cartas Pokémon"
+            Text="Catálogo de Cartas Pokémon"
             FontSize="24"
             FontAttributes="Bold"
             HorizontalOptions="Center" />
