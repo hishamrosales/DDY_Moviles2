@@ -71,8 +71,14 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Data\DTOs\" />
 	  <Folder Include="ViewModels\" />
-	  <Folder Include="Views\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <MauiXaml Update="Views\ListaCartas.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	</ItemGroup>
 
 </Project>
