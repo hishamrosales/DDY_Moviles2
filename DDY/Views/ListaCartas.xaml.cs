@@ -1,4 +1,4 @@
-using CatalogoPokemon.Models;
+using DDY.Models;
 
 namespace DDY.Views;
 
