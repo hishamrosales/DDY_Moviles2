@@ -1,54 +1,70 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:DDY.Models"
+             xmlns:vw="clr-namespace:DDY.ViewModels"
+             x:DataType="vw:ListaViewModel"
              x:Class="DDY.Views.ListaCartas"
              Title="ListaCartas">
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <ScrollView>
+        <VerticalStackLayout Margin="20">
+            <!--<ActivityIndicator IsRunning="{Binding IsLoading}"
+                   IsVisible="{Binding IsLoading}" />
 
-        <Label
-            Text="Catálogo de Cartas Pokémon"
-            FontSize="24"
-            FontAttributes="Bold"
-            HorizontalOptions="Center" />
+            <Label Text="{Binding ErrorMessage}"
+                   IsVisible="{Binding HasError}"
+                   TextColor="Red"
+                   Margin="10" />
 
-        <CollectionView ItemsSource="{Binding}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
+            <Button Text="Recargar"
+                    IsVisible="{Binding HasError}"
+                    IsEnabled="{Binding IsLoading}"
+                    Command="{Binding CargarProductosCommand}"
+                    BackgroundColor="Red"
+                    TextColor="White"
+                    Margin="10" />-->
 
-                    <Border
-                        StrokeThickness="1"
-                        Padding="10"
-                        Margin="0,5">
+            <Label
+                Text="Catálogo de Cartas Pokémon"
+                FontSize="24"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
 
-                        <VerticalStackLayout Spacing="5">
+            <CollectionView ItemsSource="{Binding Cartas}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:CartaPokemon">
+                        <Grid Padding="10" ColumnDefinitions="80, *, Auto">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vw:ListaViewModel}}, Path=VerDetalleCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
 
-                            <Label
-                                Text="{Binding Nombre}"
-                                FontSize="20"
-                                FontAttributes="Bold" />
+                            <Image
+                                Source="{Binding ImagenUrl}" 
+                                HeightRequest="60"
+                                WidthRequest="60"
+                                Aspect="AspectFill"
+                                Grid.Column="0"/>
+                            <VerticalStackLayout>
 
-                            <Label
-                                Text="{Binding Categoria}" />
+                                <Label
+                                        Text="{Binding Nombre}"
+                                        FontSize="16"
+                                        FontAttributes="Bold" />
 
-                            <Label
-                                Text="{Binding Tipo}" />
+                                <Label
+                                        Text="{Binding Rareza}"
+                                        FontSize="14" />
 
-                            <Label
-                                Text="{Binding Rareza}" />
+                            </VerticalStackLayout>
+                        </Grid>
 
-                            <Label
-                                Text="{Binding Estado}" />
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-                            <Label
-                                Text="{Binding ValorEstimado, StringFormat='Valor estimado: ${0:F2}'}" />
-
-                        </VerticalStackLayout>
-
-                    </Border>
-
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-
-    </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+    
 </ContentPage>
