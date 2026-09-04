@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:DDY.Models"
+             xmlns:vw="clr-namespace:DDY.ViewModels"
+             x:DataType="vw:ListaViewModel"
+             x:Class="DDY.Views.ListaCartas"
+             Title="ListaCartas">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Agregar" Command="{Binding IrAAgregarCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+        <VerticalStackLayout Margin="20">
+            <!--<ActivityIndicator IsRunning="{Binding IsLoading}"
+                   IsVisible="{Binding IsLoading}" />
+
+            <Label Text="{Binding ErrorMessage}"
+                   IsVisible="{Binding HasError}"
+                   TextColor="Red"
+                   Margin="10" />
+
+            <Button Text="Recargar"
+                    IsVisible="{Binding HasError}"
+                    IsEnabled="{Binding IsLoading}"
+                    Command="{Binding CargarProductosCommand}"
+                    BackgroundColor="Red"
+                    TextColor="White"
+                    Margin="10" />-->
+
+            <Label
+                Text="Catálogo de Cartas Pokémon"
+                FontSize="24"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <CollectionView ItemsSource="{Binding Cartas}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:CartaPokemon">
+                        <Grid Padding="10" ColumnDefinitions="80, *, Auto">
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vw:ListaViewModel}}, Path=VerDetalleCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+
+                            <Image
+                                Source="{Binding Imagen}" 
+                                HeightRequest="60"
+                                WidthRequest="60"
+                                Aspect="AspectFill"
+                                Grid.Column="0"/>
+                            <VerticalStackLayout>
+
+                                <Label
+                                        Text="{Binding Nombre}"
+                                        FontSize="16"
+                                        FontAttributes="Bold" />
+
+                                <Label
+                                        Text="{Binding Rareza}"
+                                        FontSize="14" />
+
+                            </VerticalStackLayout>
+                        </Grid>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
