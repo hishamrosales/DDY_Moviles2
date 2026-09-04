@@ -17,6 +17,15 @@ namespace DDY
 
 #if DEBUG
     		builder.Logging.AddDebug();
+
+            builder.Services.AddTransient<DDY.Views.ListaCartas>();
+            builder.Services.AddTransient<DDY.ViewModels.ListaViewModel>();
+
+            builder.Services.AddTransient<DDY.Views.DetalleCarta>();
+            builder.Services.AddTransient<DDY.ViewModels.DetalleViewModel>();
+
+            builder.Services.AddTransient<DDY.Views.FavoritosPage>();
+            builder.Services.AddTransient<DDY.ViewModels.FavoritosViewModel>();
 #endif
 
             return builder.Build();
