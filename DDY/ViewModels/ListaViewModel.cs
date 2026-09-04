@@ -1,10 +1,11 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using Android.Graphics;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DDY.Models;
 using DDY.Views;
-using System.Collections.ObjectModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace DDY.ViewModels
@@ -23,7 +24,7 @@ namespace DDY.ViewModels
 
         [RelayCommand]
         async Task CargarCartas()
-        { 
+        {
             Cartas = new ObservableCollection<CartaPokemon> {
             new CartaPokemon
             {
@@ -85,6 +86,21 @@ namespace DDY.ViewModels
             {
                 { "Carta", carta }
             });
+        }
+
+        [RelayCommand]
+        async Task IrAAgregar()
+        {
+            await Shell.Current.GoToAsync(nameof(CartaFormPage));
+        }
+
+        // Llamado desde CartaFormViewModel cuando se guarda una carta nueva
+        public void AgregarCarta(CartaPokemon carta)
+        {
+            if (carta is null)
+                return;
+
+            Cartas.Add(carta);
         }
     }
 }

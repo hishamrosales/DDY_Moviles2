@@ -6,6 +6,11 @@
              x:DataType="vw:ListaViewModel"
              x:Class="DDY.Views.ListaCartas"
              Title="ListaCartas">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Agregar" Command="{Binding IrAAgregarCommand}" />
+    </ContentPage.ToolbarItems>
+
     <ScrollView>
         <VerticalStackLayout Margin="20">
             <!--<ActivityIndicator IsRunning="{Binding IsLoading}"
@@ -41,7 +46,7 @@
                             </Grid.GestureRecognizers>
 
                             <Image
-                                Source="{Binding ImagenUrl}" 
+                                Source="{Binding Imagen}" 
                                 HeightRequest="60"
                                 WidthRequest="60"
                                 Aspect="AspectFill"
@@ -66,5 +71,5 @@
 
         </VerticalStackLayout>
     </ScrollView>
-    
+
 </ContentPage>

@@ -1,12 +1,9 @@
-using DDY.ViewModels;
-
 namespace DDY.Views;
 
 public partial class DetalleCarta : ContentPage
 {
-	public DetalleCarta(DetalleViewModel vm)
+	public DetalleCarta()
 	{
 		InitializeComponent();
-		BindingContext = vm;
 	}
 }

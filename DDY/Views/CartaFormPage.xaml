@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:DDY.ViewModels"
+             x:Class="DDY.Views.CartaFormPage"
+             x:DataType="vm:CartaFormViewModel"
+             Title="{Binding Titulo}">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Image Source="{Binding Imagen}"
+                   HeightRequest="160"
+                   Aspect="AspectFit"
+                   HorizontalOptions="Center" />
+
+            <Button Text="Seleccionar imagen (próxima fase)"
+                    IsEnabled="False"
+                    Opacity="0.6" />
+
+            <Label Text="Nombre de la carta" FontAttributes="Bold" />
+            <Entry Text="{Binding Nombre}" Placeholder="Ej. Pikachu" />
+
+            <Label Text="Categoría" FontAttributes="Bold" />
+            <Picker ItemsSource="{Binding Categorias}"
+                    SelectedItem="{Binding Categoria}"
+                    Title="Selecciona una categoría" />
+
+            <Label Text="Tipo" FontAttributes="Bold" />
+            <Entry Text="{Binding Tipo}" Placeholder="Ej. Eléctrico, Fuego, Agua..." />
+
+            <Label Text="Rareza" FontAttributes="Bold" />
+            <Entry Text="{Binding Rareza}" Placeholder="Ej. Común, Rara, Ultra Rara" />
+
+            <Label Text="Estado / Condición" FontAttributes="Bold" />
+            <Picker ItemsSource="{Binding Estados}"
+                    SelectedItem="{Binding Estado}"
+                    Title="Selecciona el estado" />
+
+            <Label Text="Valor estimado" FontAttributes="Bold" />
+            <Entry Text="{Binding ValorEstimadoTexto}" Placeholder="0.00" Keyboard="Numeric" />
+
+            <HorizontalStackLayout Spacing="10">
+                <Label Text="Marcar como favorito / wishlist" VerticalOptions="Center" />
+                <Switch IsToggled="{Binding EsFavorito}" />
+            </HorizontalStackLayout>
+
+            <Label Text="{Binding MensajeError}"
+                   IsVisible="{Binding TieneError}"
+                   TextColor="Red" />
+
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" Margin="0,10,0,0">
+                <Button Text="Guardar" Command="{Binding GuardarCommand}" />
+                <Button Text="Cancelar" Command="{Binding CancelarCommand}" BackgroundColor="Gray" />
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -5,7 +5,7 @@
              x:Class="DDY.Views.DetalleCarta"
              x:DataType="vm:DetalleViewModel"
              Title="DetalleCarta">
-    
+
     <VerticalStackLayout Padding="20"
                      Spacing="15">
 
@@ -32,6 +32,11 @@
            FontSize="20"
            FontAttributes="Bold"
            TextColor="DarkGreen" />
+
+        <Button Text="Editar"
+                Command="{Binding EditarCommand}"
+                HorizontalOptions="Center"
+                Margin="0,15,0,0" />
     </VerticalStackLayout>
 
 </ContentPage>
