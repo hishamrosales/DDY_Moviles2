@@ -4,6 +4,11 @@ namespace DDY
 {
     public static class MauiProgram
     {
+        // Necesario porque ListaCartas se muestra vía ShellContent.ContentTemplate,
+        // y ese mecanismo de MAUI NO soporta inyección por constructor (a diferencia
+        // de las páginas a las que se navega con Shell.Current.GoToAsync).
+        public static IServiceProvider Services { get; private set; } = default!;
+
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
@@ -33,7 +38,9 @@ namespace DDY
             builder.Services.AddTransient<DDY.Views.CartaFormPage>();
             builder.Services.AddTransient<DDY.ViewModels.CartaFormViewModel>();
 
-            return builder.Build();
+            var app = builder.Build();
+            Services = app.Services;
+            return app;
         }
     }
 }

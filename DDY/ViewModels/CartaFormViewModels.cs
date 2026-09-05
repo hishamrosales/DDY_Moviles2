@@ -3,8 +3,6 @@ using CommunityToolkit.Mvvm.Input;
 using DDY.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static Android.Hardware.Camera;
-using static Android.Icu.Text.CaseMap;
 
 namespace DDY.ViewModels
 {
