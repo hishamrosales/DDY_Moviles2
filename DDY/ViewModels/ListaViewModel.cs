@@ -1,5 +1,4 @@
-﻿using Android.Graphics;
-using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DDY.Models;
 using DDY.Views;
