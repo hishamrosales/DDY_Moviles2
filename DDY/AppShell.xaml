@@ -3,13 +3,20 @@
     x:Class="DDY.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:DDY"
-    xmlns:views="clr-namespace:DDY.Views"
-    Title="DDY">
+    xmlns:views="clr-namespace:DDY.Views">
 
-    <ShellContent
-        Title="Favoritos"
-        ContentTemplate="{DataTemplate views:ListaCartas}"
-        Route="Favoritos" />
+    <FlyoutItem Title="Cartas">
+        <ShellContent
+            Title="Cartas"
+            ContentTemplate="{DataTemplate views:ListaCartas}"
+            Route="ListaCartas" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Favoritos">
+        <ShellContent
+            Title="Favoritos"
+            ContentTemplate="{DataTemplate views:FavoritosPage}"
+            Route="FavoritosPage" />
+    </FlyoutItem>
 
 </Shell>

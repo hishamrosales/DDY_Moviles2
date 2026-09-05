@@ -21,6 +21,7 @@ namespace DDY.ViewModels
             carta.EsFavorito = false;
         }
 
+        [RelayCommand]
         public void AgregarFavorito(CartaPokemon carta)
         {
             if (carta is null)

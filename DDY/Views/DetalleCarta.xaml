@@ -7,36 +7,53 @@
              Title="DetalleCarta">
 
     <VerticalStackLayout Padding="20"
-                     Spacing="15">
+                         Spacing="15">
 
         <Image Source="{Binding Cartas.Imagen}"
-           HeightRequest="200"
-           Aspect="AspectFit" />
+               HeightRequest="200"
+               Aspect="AspectFit" />
 
         <Label Text="{Binding Cartas.Nombre}"
-           FontSize="22"
-           FontAttributes="Bold" />
-        <Label Text="{Binding Cartas.Categoria}"
-           FontSize="14"
-           TextColor="Gray" />
-        <Label Text="{Binding Cartas.Tipo}"
-           FontSize="14"
-           TextColor="Gray" />
-        <Label Text="{Binding Cartas.Rareza}"
-           FontSize="14"
-           TextColor="Gray" />
-        <Label Text="{Binding Cartas.Estado}"
-           FontSize="14"
-           TextColor="Gray" />
-        <Label Text="{Binding Cartas.ValorEstimado, StringFormat='${0:N2}'}"
-           FontSize="20"
-           FontAttributes="Bold"
-           TextColor="DarkGreen" />
+               FontSize="22"
+               FontAttributes="Bold" />
 
-        <Button Text="Editar"
-                Command="{Binding EditarCommand}"
-                HorizontalOptions="Center"
-                Margin="0,15,0,0" />
+        <Label Text="{Binding Cartas.Categoria}"
+               FontSize="14"
+               TextColor="Gray" />
+
+        <Label Text="{Binding Cartas.Tipo}"
+               FontSize="14"
+               TextColor="Gray" />
+
+        <Label Text="{Binding Cartas.Rareza}"
+               FontSize="14"
+               TextColor="Gray" />
+
+        <Label Text="{Binding Cartas.Estado}"
+               FontSize="14"
+               TextColor="Gray" />
+
+        <Label Text="{Binding Cartas.ValorEstimado, StringFormat='${0:N2}'}"
+               FontSize="20"
+               FontAttributes="Bold"
+               TextColor="DarkGreen" />
+
+        <HorizontalStackLayout
+            HorizontalOptions="Center"
+            Spacing="15"
+            Margin="0,15,0,0">
+
+            <Button Text="Editar"
+                    Command="{Binding EditarCommand}"
+                    WidthRequest="140" />
+
+            <Button Text="Agregar a Favoritos"
+                    Command="{Binding AgregarFavoritoCommand}"
+                    CommandParameter="{Binding Cartas}"
+                    WidthRequest="180" />
+
+        </HorizontalStackLayout>
+
     </VerticalStackLayout>
 
 </ContentPage>

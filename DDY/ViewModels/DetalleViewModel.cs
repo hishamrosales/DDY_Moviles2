@@ -12,6 +12,13 @@ namespace DDY.ViewModels
     [QueryProperty(nameof(Cartas), "Carta")]
     public partial class DetalleViewModel : ObservableObject
     {
+        private readonly FavoritosViewModel _favoritosViewModel;
+
+        public DetalleViewModel(FavoritosViewModel favoritosViewModel)
+        {
+            _favoritosViewModel = favoritosViewModel ?? throw new ArgumentNullException(nameof(favoritosViewModel));
+        }
+
         [ObservableProperty]
         private CartaPokemon cartas;
 
@@ -25,6 +32,20 @@ namespace DDY.ViewModels
             {
                 { "Carta", Cartas }
             });
+        }
+
+        [RelayCommand]
+        private async Task AgregarAFavoritos()
+        {
+            if (Cartas is null)
+                return;
+
+            _favoritosViewModel.AgregarFavorito(Cartas);
+
+            await Shell.Current.DisplayAlert(
+                "Favoritos",
+                $"{Cartas.Nombre} ha sido agregado a favoritos.",
+                "OK");
         }
     }
 }
