@@ -11,6 +11,22 @@ namespace DDY.ViewModels
         [ObservableProperty]
         private ObservableCollection<CartaPokemon> favoritos = new();
 
+        public FavoritosViewModel()
+        {
+            
+            Favoritos.Add(new CartaPokemon
+            {
+                Nombre = "Pikachu",
+                Categoria = "Pokémon",
+                Tipo = "Eléctrico",
+                Rareza = "Rara",
+                Estado = "Excelente",
+                ValorEstimado = 150.00m,
+                Imagen = "",
+                EsFavorito = true
+            });
+        }
+
         [RelayCommand]
         private void EliminarFavorito(CartaPokemon carta)
         {

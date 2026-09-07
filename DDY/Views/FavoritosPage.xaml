@@ -13,32 +13,24 @@
                     Margin="10">
 
         <CollectionView.EmptyView>
-
-            <VerticalStackLayout Padding="30"
-                                 Spacing="10"
-                                 VerticalOptions="Center">
-
-                <Label Text="No tienes cartas favoritas"
-                       FontSize="20"
-                       HorizontalOptions="Center" />
-
-                <Label Text="Agrega cartas desde la página de detalle."
-                       FontSize="14"
-                       TextColor="Gray"
-                       HorizontalOptions="Center" />
-
-            </VerticalStackLayout>
-
+           
+            <Label Text="No hay favoritos"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   TextColor="Gray" />
         </CollectionView.EmptyView>
 
         <CollectionView.ItemTemplate>
-
             <DataTemplate x:DataType="models:CartaPokemon">
 
                 <Grid Padding="10"
                       ColumnDefinitions="80,*,Auto">
 
-                    
+                    <Image Grid.Column="0"
+                           Source="{Binding Imagen}"
+                           HeightRequest="80"
+                           WidthRequest="60"
+                           Aspect="AspectFit" />
 
                     <VerticalStackLayout Grid.Column="1"
                                          Margin="10,0,0,0"
@@ -74,9 +66,9 @@
                 </Grid>
 
             </DataTemplate>
-
         </CollectionView.ItemTemplate>
-
+        
     </CollectionView>
 
 </ContentPage>
+   
