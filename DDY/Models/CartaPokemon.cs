@@ -1,14 +1,34 @@
-﻿namespace DDY.Models
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace DDY.Models
 {
-    public class CartaPokemon
+    public partial class CartaPokemon : ObservableObject
     {
-        public string Nombre { get; set; } = string.Empty;
-        public string Categoria { get; set; } = string.Empty;
-        public string Tipo { get; set; } = string.Empty;
-        public string Rareza { get; set; } = string.Empty;
-        public string Estado { get; set; } = string.Empty;
-        public decimal ValorEstimado { get; set; }
-        public string Imagen { get; set; } = string.Empty;
-        public bool EsFavorito { get; set; }
+        [ObservableProperty]
+        private string id = string.Empty;
+
+        [ObservableProperty]
+        private string nombre = string.Empty;
+
+        [ObservableProperty]
+        private string categoria = string.Empty;
+
+        [ObservableProperty]
+        private string tipo = string.Empty;
+
+        [ObservableProperty]
+        private string rareza = string.Empty;
+
+        [ObservableProperty]
+        private string estado = string.Empty;
+
+        [ObservableProperty]
+        private decimal valorEstimado;
+
+        [ObservableProperty]
+        private string imagen = string.Empty;
+
+        [ObservableProperty]
+        private bool esFavorito;
     }
 }

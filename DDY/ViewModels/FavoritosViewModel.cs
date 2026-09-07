@@ -1,53 +1,31 @@
-﻿using DDY.Models;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
-using System.Linq;
+using DDY.Models;
 
 namespace DDY.ViewModels
 {
     public partial class FavoritosViewModel : ObservableObject
     {
-        [ObservableProperty]
-        private ObservableCollection<CartaPokemon> favoritos = new();
+        public ObservableCollection<CartaPokemon> Favoritos { get; } = new();
 
-        public FavoritosViewModel()
+        public void AgregarFavorito(CartaPokemon carta)
         {
-            
-            Favoritos.Add(new CartaPokemon
-            {
-                Nombre = "Pikachu",
-                Categoria = "Pokémon",
-                Tipo = "Eléctrico",
-                Rareza = "Rara",
-                Estado = "Excelente",
-                ValorEstimado = 150.00m,
-                Imagen = "",
-                EsFavorito = true
-            });
+            if (carta is null) return;
+
+            carta.EsFavorito = true;
+
+            if (!Favoritos.Contains(carta))
+                Favoritos.Add(carta);
         }
 
         [RelayCommand]
         private void EliminarFavorito(CartaPokemon carta)
         {
-            if (carta is null)
-                return;
+            if (carta is null) return;
 
-            Favoritos.Remove(carta);
             carta.EsFavorito = false;
-        }
-
-        [RelayCommand]
-        public void AgregarFavorito(CartaPokemon carta)
-        {
-            if (carta is null)
-                return;
-
-            if (!Favoritos.Any(c => c.Nombre == carta.Nombre))
-            {
-                Favoritos.Add(carta);
-                carta.EsFavorito = true;
-            }
+            Favoritos.Remove(carta);
         }
     }
 }

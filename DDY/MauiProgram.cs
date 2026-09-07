@@ -1,12 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using DDY.Services;
+using DDY.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace DDY
 {
     public static class MauiProgram
     {
-        // Necesario porque ListaCartas se muestra vía ShellContent.ContentTemplate,
-        // y ese mecanismo de MAUI NO soporta inyección por constructor (a diferencia
-        // de las páginas a las que se navega con Shell.Current.GoToAsync).
         public static IServiceProvider Services { get; private set; } = default!;
 
         public static MauiApp CreateMauiApp()
@@ -24,19 +23,21 @@ namespace DDY
             builder.Logging.AddDebug();
 #endif
 
+            // Servicios / Repositorio
+            builder.Services.AddSingleton<CartaApiService>();
+            
+
+            // Páginas -> Transient
             builder.Services.AddTransient<DDY.Views.ListaCartas>();
-            // Singleton: así, al agregar una carta desde el Formulario, se refleja
-            // en la misma lista que ya está en pantalla, sin recrearla desde cero.
-            builder.Services.AddSingleton<DDY.ViewModels.ListaViewModel>();
-
             builder.Services.AddTransient<DDY.Views.DetalleCarta>();
-            builder.Services.AddTransient<DDY.ViewModels.DetalleViewModel>();
-
             builder.Services.AddTransient<DDY.Views.FavoritosPage>();
-            builder.Services.AddTransient<DDY.ViewModels.FavoritosViewModel>();
-
             builder.Services.AddTransient<DDY.Views.CartaFormPage>();
-            builder.Services.AddTransient<DDY.ViewModels.CartaFormViewModel>();
+
+            // ViewModels
+            builder.Services.AddTransient<ListaViewModel>();
+            builder.Services.AddTransient<DetalleViewModel>();
+            builder.Services.AddSingleton<FavoritosViewModel>();
+            builder.Services.AddTransient<CartaFormViewModel>();
 
             var app = builder.Build();
             Services = app.Services;
