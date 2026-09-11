@@ -30,5 +30,8 @@ namespace DDY.Models
 
         [ObservableProperty]
         private bool esFavorito;
+
+        [ObservableProperty]
+        private bool esLocal;
     }
 }

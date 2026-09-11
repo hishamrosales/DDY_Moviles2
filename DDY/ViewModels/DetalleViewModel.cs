@@ -1,51 +1,109 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using DDY.Models;
+using DDY.Services;
 using DDY.Views;
-using System;
+using Microsoft.Maui.Controls;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DDY.ViewModels
 {
-    [QueryProperty(nameof(Cartas), "Carta")]
-    public partial class DetalleViewModel : ObservableObject
+    [QueryProperty(nameof(Carta), "Carta")]
+    [QueryProperty(nameof(Carta), "carta")]
+    public partial class DetalleViewModel : ObservableObject, IQueryAttributable
     {
-        private readonly FavoritosViewModel _favoritosViewModel;
-
-        public DetalleViewModel(FavoritosViewModel favoritosViewModel)
-        {
-            _favoritosViewModel = favoritosViewModel ?? throw new ArgumentNullException(nameof(favoritosViewModel));
-        }
+        private readonly CartaApiService _apiService;
 
         [ObservableProperty]
-        private CartaPokemon cartas;
+        private CartaPokemon? carta;
+
+        [ObservableProperty]
+        private string iconoFavorito = "star_outline.png";
+
+        public DetalleViewModel(CartaApiService apiService)
+        {
+            _apiService = apiService;
+        }
+
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            if (query == null || query.Count == 0) return;
+
+            if (query.TryGetValue("Carta", out var param) || query.TryGetValue("carta", out param))
+            {
+                if (param is CartaPokemon cartaEncontrada)
+                {
+                    Carta = cartaEncontrada;
+                }
+            }
+
+            ActualizarIconoFavorito();
+        }
+
+        partial void OnCartaChanged(CartaPokemon? value)
+        {
+            ActualizarIconoFavorito();
+        }
 
         [RelayCommand]
-        async Task Editar()
+        private async Task ToggleFavoritoAsync()
         {
-            if (Cartas is null)
-                return;
+            if (Carta is null) return;
 
-            await Shell.Current.GoToAsync(nameof(CartaFormPage), true, new Dictionary<string, object>
+            
+            Carta.EsFavorito = !Carta.EsFavorito;
+
+            
+            _apiService.Actualizar(Carta);
+
+            
+            ActualizarIconoFavorito();
+
+            
+            string mensaje = Carta.EsFavorito
+                ? $"¡'{Carta.Nombre}' fue agregada a tus favoritos!"
+                : $"'{Carta.Nombre}' fue eliminada de tus favoritos.";
+
+            await Shell.Current.DisplayAlert("Favoritos", mensaje, "OK");
+        }
+
+        private void ActualizarIconoFavorito()
+        {
+            IconoFavorito = (Carta != null && Carta.EsFavorito) ? "star_filled.png" : "star_outline.png";
+        }
+
+        [RelayCommand]
+        private async Task IrAEditarAsync()
+        {
+            if (Carta == null)
             {
-                { "Carta", Cartas }
+                await Shell.Current.DisplayAlert("Aviso", "No se encontró la carta para editar.", "OK");
+                return;
+            }
+
+            await Shell.Current.GoToAsync(nameof(CartaFormPage), new Dictionary<string, object>
+            {
+                { "Carta", Carta }
             });
         }
 
         [RelayCommand]
-        private async Task AgregarAFavoritos()
+        private async Task EliminarAsync()
         {
-            if (Cartas is null)
-                return;
+            if (Carta == null) return;
 
-            _favoritosViewModel.AgregarFavorito(Cartas);
+            bool confirmar = await Shell.Current.DisplayAlert(
+                "Confirmar",
+                $"¿Seguro que deseas eliminar a '{Carta.Nombre}'?",
+                "Sí, eliminar",
+                "Cancelar");
 
-            await Shell.Current.DisplayAlert(
-                "Favoritos",
-                $"{Cartas.Nombre} ha sido agregado a favoritos.",
-                "OK");
+            if (confirmar)
+            {
+                _apiService.Eliminar(Carta);
+                await Shell.Current.GoToAsync("..");
+            }
         }
     }
 }

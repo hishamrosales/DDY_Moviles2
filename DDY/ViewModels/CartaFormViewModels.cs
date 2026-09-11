@@ -1,21 +1,25 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using DDY.Models;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using DDY.Models;
+using DDY.Services;
+using Microsoft.Maui.Controls;
 
 namespace DDY.ViewModels
 {
-    // Reutilizada para Agregar y Editar.
-    // Si llega "Carta" por QueryProperty -> modo Editar (se edita el objeto por referencia).
-    // Si no llega nada -> modo Agregar (se crea una carta nueva y se agrega al ListaViewModel).
-    [QueryProperty(nameof(CartaOriginal), "Carta")]
-    public partial class CartaFormViewModel : ObservableObject
+    [QueryProperty(nameof(CartaParaEditar), "Carta")]
+    [QueryProperty(nameof(CartaId), "id")]
+    public partial class CartaFormViewModels : ObservableObject, IQueryAttributable
     {
-        private readonly ListaViewModel listaViewModel;
+        private readonly CartaApiService _apiService;
 
         [ObservableProperty]
-        private CartaPokemon? cartaOriginal;
+        private CartaPokemon? cartaParaEditar;
+
+        [ObservableProperty]
+        private string cartaId = string.Empty;
 
         [ObservableProperty]
         private string titulo = "Agregar carta";
@@ -53,26 +57,62 @@ namespace DDY.ViewModels
         public List<string> Categorias { get; } = new() { "Pokémon", "Entrenador", "Energía" };
         public List<string> Estados { get; } = new() { "Nueva", "Buena", "Regular", "Dañada" };
 
-        public CartaFormViewModel(ListaViewModel listaViewModel)
+        public CartaFormViewModels(CartaApiService apiService)
         {
-            this.listaViewModel = listaViewModel;
+            _apiService = apiService;
         }
 
-        // Se dispara automáticamente cuando llega la carta por QueryProperty (modo Editar)
-        partial void OnCartaOriginalChanged(CartaPokemon? value)
+        public void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            if (value is null)
-                return;
+            if (query != null && query.TryGetValue("Carta", out var paramObj) && paramObj is CartaPokemon carta)
+            {
+                CargarDatosEnFormulario(carta);
+            }
+            else if (query != null && query.TryGetValue("id", out var paramId) && paramId != null)
+            {
+                var cartaEncontrada = _apiService.ObtenerPorId(paramId.ToString()!);
+                if (cartaEncontrada != null)
+                {
+                    CargarDatosEnFormulario(cartaEncontrada);
+                }
+            }
+            else
+            {
+                // Si la navegación no trae parámetros (Modo "Agregar"), se resetea todo el formulario
+                LimpiarFormulario();
+            }
+        }
 
+        private void CargarDatosEnFormulario(CartaPokemon carta)
+        {
+            CartaParaEditar = carta;
+            CartaId = carta.Id;
             Titulo = "Editar carta";
-            Nombre = value.Nombre;
-            Categoria = value.Categoria;
-            Tipo = value.Tipo;
-            Rareza = value.Rareza;
-            Estado = value.Estado;
-            ValorEstimadoTexto = value.ValorEstimado.ToString();
-            Imagen = value.Imagen;
-            EsFavorito = value.EsFavorito;
+            Nombre = carta.Nombre;
+            Categoria = carta.Categoria;
+            Tipo = carta.Tipo;
+            Rareza = carta.Rareza;
+            Estado = carta.Estado;
+            ValorEstimadoTexto = carta.ValorEstimado.ToString();
+            Imagen = carta.Imagen;
+            EsFavorito = carta.EsFavorito;
+        }
+
+        private void LimpiarFormulario()
+        {
+            CartaParaEditar = null;
+            CartaId = string.Empty;
+            Titulo = "Agregar carta";
+            Nombre = string.Empty;
+            Categoria = string.Empty;
+            Tipo = string.Empty;
+            Rareza = string.Empty;
+            Estado = string.Empty;
+            ValorEstimadoTexto = string.Empty;
+            Imagen = "dotnet_bot.png";
+            EsFavorito = false;
+            TieneError = false;
+            MensajeError = string.Empty;
         }
 
         [RelayCommand]
@@ -104,23 +144,12 @@ namespace DDY.ViewModels
                 return;
             }
 
-            if (CartaOriginal is not null)
+            if (string.IsNullOrEmpty(CartaId))
             {
-                // Modo Editar: mismo objeto por referencia -> se refleja solo en Lista/Favoritos
-                CartaOriginal.Nombre = Nombre;
-                CartaOriginal.Categoria = Categoria;
-                CartaOriginal.Tipo = Tipo;
-                CartaOriginal.Rareza = Rareza;
-                CartaOriginal.Estado = Estado;
-                CartaOriginal.ValorEstimado = valor;
-                CartaOriginal.Imagen = Imagen;
-                CartaOriginal.EsFavorito = EsFavorito;
-            }
-            else
-            {
-                // Modo Agregar
+                // Crear nueva carta
                 var nuevaCarta = new CartaPokemon
                 {
+                    Id = Guid.NewGuid().ToString(),
                     Nombre = Nombre,
                     Categoria = Categoria,
                     Tipo = Tipo,
@@ -128,18 +157,37 @@ namespace DDY.ViewModels
                     Estado = Estado,
                     ValorEstimado = valor,
                     Imagen = Imagen,
-                    EsFavorito = EsFavorito
+                    EsFavorito = EsFavorito,
+                    EsLocal = true
                 };
-
-                listaViewModel.AgregarCarta(nuevaCarta);
+                _apiService.Agregar(nuevaCarta);
+            }
+            else
+            {
+                // Actualizar carta existente
+                var cartaExistente = _apiService.ObtenerPorId(CartaId);
+                if (cartaExistente != null)
+                {
+                    cartaExistente.Nombre = Nombre;
+                    cartaExistente.Categoria = Categoria;
+                    cartaExistente.Tipo = Tipo;
+                    cartaExistente.Rareza = Rareza;
+                    cartaExistente.Estado = Estado;
+                    cartaExistente.ValorEstimado = valor;
+                    cartaExistente.Imagen = Imagen;
+                    cartaExistente.EsFavorito = EsFavorito;
+                    _apiService.Actualizar(cartaExistente);
+                }
             }
 
+            LimpiarFormulario();
             await Shell.Current.GoToAsync("..");
         }
 
         [RelayCommand]
         private async Task Cancelar()
         {
+            LimpiarFormulario();
             await Shell.Current.GoToAsync("..");
         }
 

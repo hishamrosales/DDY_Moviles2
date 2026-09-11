@@ -23,21 +23,21 @@ namespace DDY
             builder.Logging.AddDebug();
 #endif
 
-            // Servicios / Repositorio
+            // services
             builder.Services.AddSingleton<CartaApiService>();
             
 
-            // Páginas -> Transient
+            // pages
             builder.Services.AddTransient<DDY.Views.ListaCartas>();
             builder.Services.AddTransient<DDY.Views.DetalleCarta>();
             builder.Services.AddTransient<DDY.Views.FavoritosPage>();
             builder.Services.AddTransient<DDY.Views.CartaFormPage>();
 
-            // ViewModels
+            // viewmodels
             builder.Services.AddTransient<ListaViewModel>();
             builder.Services.AddTransient<DetalleViewModel>();
             builder.Services.AddSingleton<FavoritosViewModel>();
-            builder.Services.AddTransient<CartaFormViewModel>();
+            builder.Services.AddTransient<CartaFormViewModels>();
 
             var app = builder.Build();
             Services = app.Services;

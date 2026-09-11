@@ -1,13 +1,21 @@
 using DDY.ViewModels;
 
-namespace DDY.Views
+namespace DDY.Views;
+
+public partial class FavoritosPage : ContentPage
 {
-    public partial class FavoritosPage : ContentPage
+    private readonly FavoritosViewModel _vm;
+
+    public FavoritosPage(FavoritosViewModel vm)
     {
-        public FavoritosPage()
-        {
-            InitializeComponent();
-            BindingContext = new FavoritosViewModel();
-        }
+        InitializeComponent();
+        _vm = vm;
+        BindingContext = vm;
+    }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        _vm.CargarFavoritosCommand.Execute(null);
     }
 }

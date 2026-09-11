@@ -3,59 +3,102 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:models="clr-namespace:DDY.Models"
              xmlns:vw="clr-namespace:DDY.ViewModels"
+             xmlns:converters="clr-namespace:DDY.Converters"
              x:DataType="vw:ListaViewModel"
              x:Class="DDY.Views.ListaCartas"
-             Title="ListaCartas">
+             Title="Catálogo de Cartas">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:InverseBoolConverter x:Key="InverseBooleanConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
 
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Agregar" Command="{Binding IrAAgregarCommand}" />
+        <ToolbarItem Text="Ver Favoritos" Command="{Binding IrAFavoritosCommand}" Priority="0" />
+        <ToolbarItem Text="Agregar Carta" Command="{Binding IrAAgregarCommand}" Priority="1" />
     </ContentPage.ToolbarItems>
 
-    <ScrollView>
-        <VerticalStackLayout Margin="20">
-          
+    <Grid RowDefinitions="Auto, *">
+        <Label Grid.Row="0"
+               Text="Catálogo de Cartas Pokémon"
+               FontSize="24"
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               Margin="0,15,0,10" />
 
-            <Label
-                Text="Catálogo de Cartas Pokémon"
-                FontSize="24"
-                FontAttributes="Bold"
-                HorizontalOptions="Center" />
+        <VerticalStackLayout Grid.Row="1"
+                             IsVisible="{Binding ApiService.EstaCargando}"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="10">
+            <ActivityIndicator IsRunning="{Binding ApiService.EstaCargando}" />
+            <Label Text="Cargando cartas desde la API" TextColor="Gray" FontSize="16" />
+        </VerticalStackLayout>
 
-            <CollectionView ItemsSource="{Binding Cartas}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="models:CartaPokemon">
-                        <Grid Padding="10" ColumnDefinitions="80, *, Auto">
+        <VerticalStackLayout Grid.Row="1"
+                             IsVisible="{Binding ApiService.TieneError}"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Padding="20"
+                             Spacing="10">
+            <Label Text="{Binding ApiService.MensajeError}" TextColor="Red" HorizontalTextAlignment="Center" FontSize="16" />
+        </VerticalStackLayout>
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Cartas}"
+                        Margin="10,0"
+                        IsVisible="{Binding ApiService.EstaCargando, Converter={StaticResource InverseBooleanConverter}, FallbackValue=True}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:CartaPokemon">
+                    <Border Margin="5,6"
+                            Padding="12"
+                            StrokeShape="RoundRectangle 10"
+                            StrokeThickness="1"
+                            BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1E1E1E}">
+
+                        <Grid ColumnDefinitions="80, *, Auto" ColumnSpacing="15">
                             <Grid.GestureRecognizers>
-                                <TapGestureRecognizer
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vw:ListaViewModel}}, Path=VerDetalleCommand}"
-                                    CommandParameter="{Binding .}" />
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vw:ListaViewModel}}, Path=VerDetalleCommand}"
+                                                      CommandParameter="{Binding .}" />
                             </Grid.GestureRecognizers>
 
-                            <Image
-                                Source="{Binding Imagen}" 
-                                HeightRequest="60"
-                                WidthRequest="60"
-                                Aspect="AspectFill"
-                                Grid.Column="0"/>
-                            <VerticalStackLayout>
+                            <Image Grid.Column="0"
+                                   Source="{Binding Imagen}"
+                                   HeightRequest="75"
+                                   WidthRequest="75"
+                                   Aspect="AspectFit"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center" />
 
-                                <Label
-                                        Text="{Binding Nombre}"
-                                        FontSize="16"
-                                        FontAttributes="Bold" />
-
-                                <Label
-                                        Text="{Binding Rareza}"
-                                        FontSize="14" />
-
+                            <VerticalStackLayout Grid.Column="1" VerticalOptions="Center" Spacing="4">
+                                <Label Text="{Binding Nombre}"
+                                       FontSize="17"
+                                       FontAttributes="Bold"
+                                       LineBreakMode="TailTruncation" />
+                                <Label Text="{Binding Rareza}"
+                                       FontSize="14"
+                                       TextColor="Gray" />
+                                <Label Text="{Binding ValorEstimado, StringFormat='${0:N2} MXN'}"
+                                       FontSize="13"
+                                       FontAttributes="Bold"
+                                       TextColor="#2E7D32" />
                             </VerticalStackLayout>
+
+                            <Button Grid.Column="2"
+                                    Text="Eliminar"
+                                    FontSize="13"
+                                    VerticalOptions="Center"
+                                    BackgroundColor="#D32F2F"
+                                    TextColor="White"
+                                    CornerRadius="8"
+                                    Padding="10,5"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vw:ListaViewModel}}, Path=EliminarCartaCommand}"
+                                    CommandParameter="{Binding .}" />
                         </Grid>
-
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-
-        </VerticalStackLayout>
-    </ScrollView>
-
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>
