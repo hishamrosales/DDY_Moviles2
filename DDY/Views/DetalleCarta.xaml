@@ -84,8 +84,7 @@
                     FontAttributes="Bold" />
 
             <!-- boton editar -->
-            <Grid ColumnDefinitions="*, *" ColumnSpacing="12" Margin="0,5,0,10">
-                <Button Grid.Column="0"
+                <Button 
                         Text="Editar"
                         Command="{Binding IrAEditarCommand}"
                         BackgroundColor="#7E57C2"
@@ -93,7 +92,6 @@
                         CornerRadius="10"
                         HeightRequest="48"
                         FontAttributes="Bold" />
-            </Grid>
 
         </VerticalStackLayout>
     </ScrollView>
